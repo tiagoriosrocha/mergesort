@@ -13,7 +13,7 @@ merge7.c -> implementação do merge com openmp automatizada para o benchmark
 merge8.c -> implementação do merge com um vetor global
 
 merge3.c
-AMD® A8-5500b apu with radeon(tm) x 4, 8,0 GiB de RAM, Ubuntu 22.04.4 LTS, 64 bits
+AMD® A8-5500b apu with radeon(tm) x 4, 8,0 GiB de RAM, Ubuntu 22.04.4 LTS, 64 bits (merge + bubble sort)
 
 Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	   Hybrid(50)	Hybrid(25)	 Hybrid(15)	  Hybrid(10)   Hybrid(5)
 100000 ->    0,05      0.33          0.08          0.04         0.03         0,05         0.02         0.05
@@ -22,7 +22,7 @@ Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	   Hybrid(50)	Hybrid(25)	 Hybrid(15)	  H
 
 
 merge4.c
-Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (bubble-sort)
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + bubble-sort)
 
 Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	Hybrid(50)	Hybrid(25)	Hybrid(15)	Hybrid(10)	Hybrid(5)
 100000	    0.02	0.09	        0.02	    0.01	    0.01	    0.01	    0.01	    0.01
@@ -31,7 +31,7 @@ Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	Hybrid(50)	Hybrid(25)	Hybrid(15)	Hybrid(
 
 
 merge5.c
-Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (insetion-sort)
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + insetion-sort)
 
 Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	   Hybrid(50)	Hybrid(25)	 Hybrid(15)	  Hybrid(10)   Hybrid(5)
 100000	    0.01	0.01	        0.00	       0.00	        0.00	     0.00	      0.00	       0.01
@@ -40,7 +40,7 @@ Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	   Hybrid(50)	Hybrid(25)	 Hybrid(15)	  H
 
 
 merge6.c
-Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (Timsort)
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + Timsort)
 
 Tamanho 	Merge	Hybrid(1000)	Hybrid(100)	   Hybrid(50)	Hybrid(25)	 Hybrid(15)	  Hybrid(10)   Hybrid(5)
 100000	    0.01	0.01	        0.01	        0.00	    0.00	     0.00	      0.00	       0.00
@@ -67,13 +67,14 @@ Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits 
 ###################################################################################################
 //contagem de instruções de comparação
 
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + bubble sort)
 merge4_count_instructions.c
 Tamanho 	Merge	    Hybrid(1000)	Hybrid(100)	Hybrid(50)	Hybrid(25)	Hybrid(15)	Hybrid(10)	Hybrid(5)
 100000	    1536368	    39712278	    5830856	    3487474	    2363244	    1845517	    1626343	    1549008
 10000000	220099907	3186726951	    546224246	365237269	279373030	240848655	240848655	225314194
 100000000	2532932550	39796715064	    6716422256	4430300145	3334234722	2830470861	2618073645	2545558028
 
-
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + insertion sort)
 merge5_count_instructions.c
 Tamanho	    Merge	    Hybrid(1000)	Hybrid(100)	    Hybrid(50)	    Hybrid(25)	Hybrid(15)	Hybrid(10)	Hybrid(5)
 100000	    1536368	    20357557	    3522065	        2387088	        1862654	    1639659	    1558202	    1536917
@@ -84,6 +85,8 @@ Tamanho	    Merge	    Hybrid(1000)	Hybrid(100)	    Hybrid(50)	    Hybrid(25)	Hyb
 ###################################################################################################
 ###################################################################################################
 //contagem de memória
+
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + bubble sort)
 merge4_count_memory.c
 Tamanho 	Merge	    Hybrid(1000)	Hybrid(100)	    Hybrid(50)	    Hybrid(25)	    Hybrid(15)	    Hybrid(10)	    Hybrid(5)
 100000	    1200000	    1200000	        1200000	        1200000	        1200000	        1200000	        1200000	        1200000
@@ -115,6 +118,7 @@ Total = 8.000.000 bytes
 ###################################################################################################
 //contagem de quantidade de alocações dos dados do vetor original para o temporário
 
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + bubble sort)
 merge4_count_qtd_aloc.c
 Tamanho	    Merge	    Hybrid(1000)	Hybrid(100)	Hybrid(50)	Hybrid(25)	Hybrid(15)	Hybrid(10)	Hybrid(5)
 100000	    3437856	    60176172	    9388482	    5901338	    4258525	    3542754	    3284849	    3255760
@@ -122,7 +126,7 @@ Tamanho	    Merge	    Hybrid(1000)	Hybrid(100)	Hybrid(50)	Hybrid(25)	Hybrid(15)	
 100000000	5431564544	60643223849	    11177732399	7801611001	6213565677	5519545523	5272477081	5248343398
 
 
-
+Intel® Core™ i7-14700KF × 28, 16.0 GiB de RAM, Ubuntu 24.04.3 LTS, 64 bits (merge + insertion sort)
 merge5_count_qtd_aloc.c
 Tamanho     Merge	    Hybrid(1000)	Hybrid(100)	Hybrid(50)	Hybrid(25)	Hybrid(15)	Hybrid(10)	Hybrid(5)
 100000	    3505294	    21258488	    4727420	    3696366	    3278217	    3165409	    3198688	    3297534
