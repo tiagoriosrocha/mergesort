@@ -20,7 +20,9 @@ def load_data():
         df_bubble = pd.read_csv("merge-bubble-summary_results.csv")
         df_insertion = pd.read_csv("merge-insertion-summary_results.csv")
         df_best = pd.read_csv("melhores_resultados_merge_hibridos.csv")
-        return df_bubble, df_insertion, df_best
+        df_bubble_raw = pd.read_csv("merge-bubble-raw_times.csv")
+        df_insertion_raw = pd.read_csv("merge-insertion-raw_times.csv")
+        return df_bubble, df_insertion, df_best, df_bubble_raw, df_insertion_raw
     except FileNotFoundError as e:
         st.error(f"Erro ao carregar o arquivo: {e.filename}. Certifique-se de que todos os arquivos CSV (e imagens) estão na mesma pasta que o app.py.")
         return None, None, None
@@ -170,7 +172,7 @@ def create_comparison_chart(df_raw):
     return chart
 
 # --- Carregamento Principal ---
-df_bubble, df_insertion, df_best = load_data()
+df_bubble, df_insertion, df_best, df_bubble_raw, df_insertion_raw = load_data()
 code_merge4 = load_code('merge4_final.c')
 code_merge5 = load_code('merge5_final.c')
 
@@ -186,9 +188,10 @@ else:
 # --- Interface do Streamlit (Navegação) ---
 st.sidebar.title("Navegação da Análise")
 page = st.sidebar.radio("Ir para:", [
+    "Apresentação",
     "Introdução",
     "1. Fundamentos (Algoritmos Base)",
-    "2. Metodologia (O Algoritmo Híbrido)",
+    "2. Metodologia Experimental",
     "3. Análise de Complexidade Teórica",
     "4. Resultados Visuais (Gráficos)",
     "5. Conclusões",
@@ -197,8 +200,29 @@ page = st.sidebar.radio("Ir para:", [
 ])
 
 # --- Conteúdo das Páginas ---
+if page == "Apresentação":
+    st.set_page_config(page_title="Análise Mergesort Híbrido")
+    st.title("Análise de Desempenho: Otimizando o Merge Sort com Hibridização")
+    st.markdown("---")
+    st.markdown("Universidade Federal do Rio Grande do Sul (UFRGS) | Pós-Graduação em Ciência da Computação | CMP 625 - Algorithms")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Aluno:** Tiago Rios da Rocha")
+    with col2:
+        st.markdown("**Professor:** Nicolas Maillard")
+    st.divider()
+    st.subheader("Objetivo da Análise")
+    st.markdown("""
+    Bem-vindos. Esta apresentação investiga um problema clássico na otimização de algoritmos: o **custo da recursão**.
 
-if page == "Introdução":
+    O Merge Sort é mundialmente famoso por sua excelente complexidade teórica de $\Theta(n \log n)$. No entanto, o *overhead* (custo computacional) de suas chamadas de função pode ser ineficiente para ordenar sub-arrays muito pequenos.
+
+    **A hipótese deste trabalho é que podemos obter um ganho de desempenho prático ao criar um algoritmo híbrido.**
+    
+    A estratégia é parar a recursão quando o array for pequeno o suficiente (definido por um `THRESHOLD`) e usar um algoritmo quadrático mais simples, como o Insertion Sort ou o Bubble Sort, para finalizar o trabalho.
+    """)    
+
+elif page == "Introdução":
     st.title("Análise de Desempenho: Otimizando o Merge Sort com Hibridização")
     st.markdown("""
     Esta aplicação apresenta uma análise completa de algoritmos de ordenação híbridos.
@@ -268,8 +292,10 @@ elif page == "1. Fundamentos (Algoritmos Base)":
         """)
         st.code(extract_function(code_merge5, "insertionSort"), language='c')
 
-elif page == "2. Metodologia (O Algoritmo Híbrido)":
-    st.header("2. A Metodologia: O Algoritmo Híbrido")
+elif page == "2. Metodologia Experimental":
+    st.header("2. Metodologia Experimental")
+    
+    st.subheader("A Estratégia Híbrida")
     st.markdown("""
     O objetivo é combinar o melhor dos dois mundos:
     - Usar a eficiência $\Theta(n \log n)$ do **Merge Sort** para dividir o problema grande.
@@ -289,17 +315,35 @@ elif page == "2. Metodologia (O Algoritmo Híbrido)":
                 insertionSort(arr, l, r); // Caso Base Otimizado
             } else {
                 int m = l + (r - l) / 2;
-                
-                // Chamadas Recursivas
                 mergeSort(arr, l, m, THRESHOLD);
                 mergeSort(arr, m + 1, r, THRESHOLD);
-                
-                // Combinação
                 merge(arr, l, m, r);
             }
         }
     }
     """, language='c')
+    
+    st.divider()
+    st.subheader("Execução dos Testes e Coleta de Dados")
+    st.markdown("""
+    Para garantir a confiabilidade estatística dos resultados, cada algoritmo foi submetido a um rigoroso processo de benchmarking. A análise dos arquivos `raw_times.csv` revela uma metodologia adaptativa:
+    
+    1.  **Execuções de 50x (Testes Rápidos):**
+        * Para a grande maioria das entradas (ex: `Tamanho` de 3 até 335,544,320), cada combinação de `Tamanho` e `Threshold` foi executada **50 vezes**. Isso garante uma alta confiança estatística nos resultados para os casos de teste mais rápidos.
+    
+    2.  **Execuções de 10x (Testes Lentos):**
+        * Para as entradas de `Tamanho` muito grande (ex: 671,088,640 e 1,342,177,280), que são computacionalmente caras, o número de execuções foi reduzido para **10 vezes** para manter o tempo total de benchmark viável.
+
+    Para **todas** as combinações, calculamos as seguintes métricas (presentes nas planilhas `summary_results`):
+    """)
+    
+    st.markdown(r"""
+    * **Média (MediaCPU, MediaReal):** O tempo médio de execução das corridas (10 ou 50). Esta é a métrica central usada para comparar o desempenho.
+        $$\text{Média} = \frac{\sum_{i=1}^{N} \text{Tempo}_i}{N} \quad (N=10 \text{ ou } 50)$$
+    * **Desvio Padrão (DesvioCPU, DesvioReal):** Mede a *variabilidade* ou *dispersão* dos tempos. Um desvio padrão baixo (próximo de zero), como os observados nos dados, indica que os resultados das execuções foram muito consistentes e confiáveis.
+    
+    Os gráficos nas seções seguintes utilizam a **menor média** (`MediaReal.min()`) encontrada para cada `Tamanho`, representando o desempenho ótimo do algoritmo (ou seja, o melhor `Threshold` para aquele `Tamanho`).
+    """)
 
 elif page == "3. Análise de Complexidade Teórica":
     st.header("3. Análise de Complexidade Teórica")
@@ -360,13 +404,11 @@ elif page == "4. Resultados Visuais (Gráficos)":
 elif page == "5. Conclusões":
     st.header("5. Conclusões Finais")
     st.markdown("""
-    1.  **Teoria Validada:** Todos os algoritmos (Puro e Híbridos) têm uma complexidade assintótica de **$\Theta(n \log n)$**, como provado pela teoria e validado pelos gráficos de desempenho.
-
-    2.  **Otimização Funciona (às vezes):** A hibridização é uma otimização de *fator constante*. A escolha do algoritmo para o caso base é crucial.
-
-    3.  **O Vencedor:** O híbrido **Merge Sort + Insertion Sort (`merge5.c`)** provou ser uma otimização bem-sucedida, superando o desempenho do Merge Sort Puro.
-
-    4.  **O Perdedor:** O híbrido **Merge Sort + Bubble Sort (`merge4.c`)** foi ineficaz, sendo consistentemente mais lento que a versão original pura.
+    1.  **Metodologia Robusta:** O benchmark adaptativo (50x/10x) forneceu dados estatisticamente consistentes, com baixo desvio padrão.
+    2.  **Teoria Validada:** Todos os algoritmos (Puro e Híbridos) têm uma complexidade assintótica de **$\Theta(n \log n)$**, como provado pela teoria e validado pelos gráficos de desempenho.
+    3.  **Otimização Funciona (às vezes):** A hibridização é uma otimização de *fator constante*. A escolha do algoritmo para o caso base é crucial.
+    4.  **O Vencedor:** O híbrido **Merge Sort + Insertion Sort (`merge5.c`)** provou ser uma otimização bem-sucedida, superando o desempenho do Merge Sort Puro.
+    5.  **O Perdedor:** O híbrido **Merge Sort + Bubble Sort (`merge4.c`)** foi ineficaz, sendo consistentemente mais lento que a versão original pura.
     """)
 
     # Solicitação #8: Análise do Threshold
@@ -431,29 +473,84 @@ elif page == "Apêndice: Códigos-Fonte (.c)":
     
     with st.expander("merge4_final.c (Híbrido Merge + Bubble)"):
         st.code(code_merge4, language='c')
+        st.download_button(
+            label="Baixar merge4_final.c",
+            data=code_merge4,
+            file_name="merge4_final.c",
+            mime="text/x-csrc"
+        )
         
     with st.expander("merge5_final.c (Híbrido Merge + Insertion)"):
         st.code(code_merge5, language='c')
+        st.download_button(
+            label="Baixar merge5_final.c",
+            data=code_merge5,
+            file_name="merge5_final.c",
+            mime="text/x-csrc"
+        )
 
 elif page == "Apêndice: Dados Brutos (.csv)":
     st.header("Apêndice: Dados Brutos (.csv)")
     
-    if df_best is not None:
-        st.subheader("Melhores Resultados (Comparativo Final)")
-        with st.expander("Mostrar dados"):
+    st.subheader("Melhores Resultados (Comparativo Final)")
+    with st.expander("Mostrar dados de 'melhores_resultados_merge_hibridos.csv'"):
+        if df_best is not None:
             st.dataframe(df_best)
+            st.download_button(
+                label="Baixar melhores_resultados_merge_hibridos.csv",
+                data=df_best.to_csv(index=False).encode('utf-8'),
+                file_name="melhores_resultados_merge_hibridos.csv",
+                mime="text/csv"
+            )
+        else:
+            st.warning("Arquivo não carregado.")
 
-    if df_insertion is not None:
-        st.subheader("Resultados Completos (Merge + Insertion)")
-        with st.expander("Mostrar dados"):
+    st.subheader("Resultados Sumarizados (Médias e Desvios)")
+    with st.expander("Mostrar dados de 'merge-insertion-summary_results.csv'"):
+        if df_insertion is not None:
             st.dataframe(df_insertion)
-        
-    if df_bubble is not None:
-        st.subheader("Resultados Completos (Merge + Bubble)")
-        with st.expander("Mostrar dados"):
+            st.download_button(
+                label="Baixar merge-insertion-summary_results.csv",
+                data=df_insertion.to_csv(index=False).encode('utf-8'),
+                file_name="merge-insertion-summary_results.csv",
+                mime="text/csv"
+            )
+        else:
+            st.warning("Arquivo não carregado.")
+            
+    with st.expander("Mostrar dados de 'merge-bubble-summary_results.csv'"):
+        if df_bubble is not None:
             st.dataframe(df_bubble)
-
-    if df_bubble_raw is not None:
-        st.subheader("Resultados brutos (Merge + Bubble)")
-        with st.expander("Mostrar dados"):
+            st.download_button(
+                label="Baixar merge-bubble-summary_results.csv",
+                data=df_bubble.to_csv(index=False).encode('utf-8'),
+                file_name="merge-bubble-summary_results.csv",
+                mime="text/csv"
+            )
+        else:
+            st.warning("Arquivo não carregado.")
+            
+    st.subheader("Dados Brutos (Execuções Individuais)")
+    with st.expander("Mostrar dados de 'merge-insertion-raw_times.csv'"):
+        if df_insertion_raw is not None:
+            st.dataframe(df_insertion_raw)
+            st.download_button(
+                label="Baixar merge-insertion-raw_times.csv",
+                data=df_insertion_raw.to_csv(index=False).encode('utf-8'),
+                file_name="merge-insertion-raw_times.csv",
+                mime="text/csv"
+            )
+        else:
+            st.warning("Arquivo não carregado.")
+            
+    with st.expander("Mostrar dados de 'merge-bubble-raw_times.csv'"):
+        if df_bubble_raw is not None:
             st.dataframe(df_bubble_raw)
+            st.download_button(
+                label="Baixar merge-bubble-raw_times.csv",
+                data=df_bubble_raw.to_csv(index=False).encode('utf-8'),
+                file_name="merge-bubble-raw_times.csv",
+                mime="text/csv"
+            )
+        else:
+            st.warning("Arquivo não carregado.")
