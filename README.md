@@ -61,7 +61,7 @@ Os arquivos de saída CSV possuem colunas como `Tamanho,Threshold,Execucao,Tempo
 
 ## Processamento de resultados
 
-Há programas C para processar os CSVs gerados e selecionar os melhores resultados por tamanho. Exemplo:
+Há programas em C para processar os CSVs gerados e selecionar os melhores resultados por tamanho. Exemplo:
 
 ```bash
 gcc -O2 -o process_best_merge_results process_best_merge_results.c
