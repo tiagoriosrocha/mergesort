@@ -55,33 +55,9 @@ O aplicativo será aberto automaticamente em seu navegador no endereço:
 http://localhost:8501
 ```
 
----
-
-## ☁️ Como Publicar Gratuitamente
-
-Você pode publicar **gratuitamente** seu app usando o [Streamlit Community Cloud](https://share.streamlit.io):
-
-1. Crie um repositório no GitHub (por exemplo, `algoritmos-hibridos-streamlit`).
-2. Envie todos os arquivos dentro da pasta `streamlit/` para o repositório.
-3. Acesse [share.streamlit.io](https://share.streamlit.io).
-4. Conecte sua conta GitHub e escolha o repositório.
-5. Defina o caminho do arquivo principal como:
-   ```
-   streamlit/app.py
-   ```
-6. Clique em **Deploy** e aguarde a publicação.
-
----
-
 ## 👨‍💻 Autor
 
 **Tiago Rios da Rocha**  
 Universidade Federal do Rio Grande do Sul (UFRGS)  
 Disciplina: CMP625 - Algorithms  
 Professor: Nicolas Maillard
-
----
-
-## 📜 Licença
-
-Este projeto é de uso acadêmico e livre para consulta e estudo.
