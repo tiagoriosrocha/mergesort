@@ -1,4 +1,4 @@
-## streamlit-mergesort
+## Hybrid Mergesort/Bubble/Insertion
 
 Repositório com implementações e benchmarks de variações do Merge Sort e híbridos (Merge + Insertion / Merge + Bubble), além de ferramentas de medição (tempo CPU/real, contagem de instruções, memória e quantidade de cópias). Contém também scripts para processar os resultados e notebooks de análise.
 
