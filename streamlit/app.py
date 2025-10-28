@@ -334,7 +334,7 @@ elif page == "2. Metodologia Experimental":
     2.  **Execuções de 10x (Testes Lentos):**
         * Para as entradas de `Tamanho` muito grande (ex: 671,088,640 e 1,342,177,280), que são computacionalmente caras, o número de execuções foi reduzido para **10 vezes** para manter o tempo total de benchmark viável.
 
-    Para **todas** as combinações, calculamos as seguintes métricas (presentes nas planilhas `summary_results`):
+    Para **todas** as combinações, foram calculadas as seguintes métricas (presentes nas planilhas `summary_results`):
     """)
     
     st.markdown(r"""
@@ -455,7 +455,7 @@ elif page == "5. Conclusões":
         st.markdown("##### Híbrido: Merge + Insertion")
         if not best_thresholds_insertion.empty:
             st.dataframe(best_thresholds_insertion, use_container_width=True)
-            st.caption("O `THRESHOLD` ideal para o Insertion Sort parece estabilizar entre 10 e 50 para a maioria das entradas.")
+            st.caption("Menores tempos médios para cada tamanho de entrada.")
         else:
             st.warning("Dados de threshold do Insertion Sort não puderam ser analisados.")
             
@@ -463,7 +463,7 @@ elif page == "5. Conclusões":
         st.markdown("##### Híbrido: Merge + Bubble")
         if not best_thresholds_bubble.empty:
             st.dataframe(best_thresholds_bubble, use_container_width=True)
-            st.caption("O `THRESHOLD` ideal para o Bubble Sort varia mais, mas também tende a ser um valor pequeno.")
+            st.caption("Menores tempos médios para cada tamanho de entrada.")
         else:
             st.warning("Dados de threshold do Bubble Sort não puderam ser analisados.")
 
