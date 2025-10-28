@@ -175,6 +175,9 @@ def create_comparison_chart(df_raw):
 df_bubble, df_insertion, df_best, df_bubble_raw, df_insertion_raw = load_data()
 code_merge4 = load_code('merge4_final.c')
 code_merge5 = load_code('merge5_final.c')
+code_best_merge = load_code('process_best_merge_results.c')
+code_best_insertion = load_code('process_best_mergeinsertion_results.c')
+code_best_bubble = load_code('process_best_mergebubble_results.c')
 
 # Análise de Threshold (para Solicitação #8)
 if df_insertion is not None and df_bubble is not None:
@@ -489,10 +492,37 @@ elif page == "Apêndice: Códigos-Fonte (.c)":
             mime="text/x-csrc"
         )
 
+    with st.expander("process_best_merge_results.c (Pegar melhores tempos Merge Puro)"):
+        st.code(code_best_merge, language='c')
+        st.download_button(
+            label="Baixar process_best_merge_results.c.c",
+            data=code_best_merge,
+            file_name="process_best_merge_results.c",
+            mime="text/x-csrc"
+        )
+
+    with st.expander("process_best_mergebubble_results.c (Pegar melhores tempos Merge + Bubble)"):
+        st.code(code_best_bubble, language='c')
+        st.download_button(
+            label="Baixar process_best_mergebubble_results.c",
+            data=code_best_bubble,
+            file_name="process_best_mergebubble_results.c",
+            mime="text/x-csrc"
+        )
+
+    with st.expander("process_best_mergeinsertion_results.c (Pegar melhores tempos Merge + Insertion)"):
+        st.code(code_best_insertion, language='c')
+        st.download_button(
+            label="Baixar process_best_mergeinsertion_results.c",
+            data=code_best_insertion,
+            file_name="process_best_mergeinsertion_results.c",
+            mime="text/x-csrc"
+        )
+
 elif page == "Apêndice: Dados Brutos (.csv)":
     st.header("Apêndice: Dados Brutos (.csv)")
     
-    st.subheader("Melhores Resultados (Comparativo Final)")
+    st.subheader("Melhores Resultados (Comparativo Final - três .csv de melhores tempos combinados)")
     with st.expander("Mostrar dados de 'melhores_resultados_merge_hibridos.csv'"):
         if df_best is not None:
             st.dataframe(df_best)
